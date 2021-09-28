@@ -26,7 +26,7 @@
                         <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Latitude</label>
-                                <input wire:model="lat" type="text" class="form-control">
+                                <input wire:model="lot" type="text" class="form-control">
                             </div>
                         </div>
                     </div>
@@ -41,26 +41,35 @@
 @push('scripts')
 
 <script>
-    document.addEventListener('livewire:load', ()=>{
+    document.addEventListener('livewire:load', () => {
         const defaultlocation = [32.48134141930012, 15.64275642504424]
 
         mapboxgl.accessToken = '{{env("MAPBOX_KEY")}}';
+        mapboxgl.setRTLTextPlugin(
+            '{{env("MAPBOX_RTL")}}',
+            null,
+            true 
+        );
         var map = new mapboxgl.Map({
         container: 'map',
         center: defaultlocation,
-        zoom: 11.15,
-        style: 'mapbox://styles/mapbox/dark-v10'
+        zoom: 11.15
         });
-        map.addControl(new mapboxgl.NavigationControl());
+        
+        const style = 'dark-v10'
+        map.setStyle(`mapbox://styles/mapbox/${style}`)
+        map.addControl(new mapboxgl.NavigationControl())
 
 
         map.on('click', (e) => {
             const maz = e.lngLat.lng
             const zax = e.lngLat.lat
 
-            @this.long = maz 
-            @this.lat = zax
-        })
+             @this.long = maz 
+             @this.lot = zax
+            console.log({zax, maz});
+
+        });
     })
         
 </script>
